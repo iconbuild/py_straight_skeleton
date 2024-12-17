@@ -1,0 +1,6 @@
+# Due to minimal dependencies, we can probably ignore the poetry.lock file.
+poetry.lock
+
+.vscode/**
+src/py_straight_skeleton/__pycache__/**
+dist/**

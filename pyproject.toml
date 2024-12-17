@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "py_straight_skeleton"
+version = "0.1.0"
+description = "Compute the straight skeleton of a polygon and its resulting polygonal faces."
+authors = ["Raul Sampedro", "ICON Build"]
+license = "3-Clause BSD"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+matplotlib = "^3.10.0"
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.29.5"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 120
