@@ -1,6 +1,7 @@
 # py_straight_skeleton
 
-Implementation of [Straight Skeleton](https://en.wikipedia.org/wiki/Straight_skeleton) with no additional dependencies.
+Implementation of [Straight Skeleton](https://en.wikipedia.org/wiki/Straight_skeleton) computation, with minimal
+dependencies.
 
 To the best of our knowledge, our **results compete or surpass** some of the top libraries to compute straight skeletons
 of simple polygons. By "surpassing" we mean that, in our tests, our library can properly support polygons that other
