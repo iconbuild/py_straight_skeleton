@@ -97,6 +97,7 @@ def is_vector_in_segment_polygon(
     segment_ori = Orientation.of_vec_with_respect_to(
         vec=next_segment, wrt=prev_segment, collinearity_epsilon_degrees=collinearity_epsilon_degrees
     )
+    # TODO Need to review whether the inclusive checks here should allow opposites. Add unit-tests.
     if segment_ori.is_left_exclusive():
         # Convex angle
         # The polygon is to the left if bisector is Left-Left with respect to our segments.
@@ -564,12 +565,12 @@ class Edge:
         end_p, end_bis = self.end_vertex.position, self.end_vertex.bisector_direction
 
         left_check = (
-            partial(Orientation.is_left_inclusive, allow_aligned=True, allow_opposite=True)
+            partial(Orientation.is_left_inclusive, allow_aligned=True, allow_opposite=False)
             if allow_inclusive
             else Orientation.is_left_exclusive
         )
         right_check = (
-            partial(Orientation.is_right_inclusive, allow_aligned=True, allow_opposite=True)
+            partial(Orientation.is_right_inclusive, allow_aligned=True, allow_opposite=False)
             if allow_inclusive
             else Orientation.is_right_exclusive
         )

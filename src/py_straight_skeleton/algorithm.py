@@ -6,12 +6,7 @@ import math
 from enum import Enum, auto
 from typing import Generic, Iterator, Protocol, TypeAlias, TypeVar, cast
 
-from py_straight_skeleton.constants import (
-    DISTANCE_EPSILON,
-    NONCOLLINEARITY_EPSILON_DEGS,
-    TIGHT_COLLINEARITY_EPSILON_DEGS,
-    TIME_EPSILON,
-)
+from py_straight_skeleton.constants import DISTANCE_EPSILON, NONCOLLINEARITY_EPSILON_DEGS, TIME_EPSILON
 from py_straight_skeleton.polygon_math import LAV, DegenerateLAVError, Edge, VertexInfo, is_point_inside_polygon_edges
 from py_straight_skeleton.skeleton import Skeleton
 from py_straight_skeleton.vector_math import Line2, Orientation, Ray2, Vector2
@@ -739,20 +734,10 @@ class StraightSkeletonAlgorithm:
                     GLOBAL_ALGORITHM_TRACER.on_vertex_became_its_opposite_edge(event_info=event_info)
                     continue
 
-                yori = Orientation.of_vec_with_respect_to(
-                    vec=(event_info.position - y_cand.position),
-                    wrt=y_cand.bisector_direction,
-                    collinearity_epsilon_degrees=TIGHT_COLLINEARITY_EPSILON_DEGS,
-                )
-                on_y_bis_right = yori.is_right_inclusive()
-                xori = Orientation.of_vec_with_respect_to(
-                    vec=(event_info.position - x_cand.position),
-                    wrt=x_cand.bisector_direction,
-                    collinearity_epsilon_degrees=TIGHT_COLLINEARITY_EPSILON_DEGS,
-                )
-                on_x_bis_left = xori.is_left_inclusive()
-
-                if not on_y_bis_right or not on_x_bis_left:
+                # Test that the point is in the region defined by the candidate split points.
+                test_edge = Edge(start_vertex=y_cand, end_vertex=x_cand)
+                in_region = test_edge.is_point_in_edge_region(point=event_info.position)
+                if not in_region:
                     continue
 
                 if y == event_info.v or x == event_info.v:
@@ -928,7 +913,12 @@ class StraightSkeletonAlgorithm:
                     if split_event_info.v.processed:
                         continue
                 # If the vertex is still unprocessed, this would generate a degenerate skeleton, so raise an error.
-                raise RuntimeError("Event is still pending, but it is outside the polygon.")
+                # TODO This does happen in real cases. Originally I added it to detect unfinished skeletons, when
+                # events the last events were detected outside the polygon due to bad LAVs. However I have seen valid
+                # cases in which a split event is generated outside the polygon due to the opposite edge collapsing
+                # under earlier edge events.
+                # raise RuntimeError("Event is still pending, but it is outside the polygon.")
+                continue
 
             # Process the event.
             if event_info.is_edge_event:

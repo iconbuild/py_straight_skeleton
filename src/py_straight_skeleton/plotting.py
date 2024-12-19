@@ -1,6 +1,7 @@
 """
 Utilities and tracers to plot the state of the straight skeleton algorithm to Matplotlib figures.
 """
+
 import logging
 import os
 from typing import Any, Sequence
@@ -352,10 +353,14 @@ class PlotTracer(NoopAlgorithmTracer, NoopPolygonMathTracer):
             fig.savefig(target_dir)
             if close_it:
                 plt.close(fig)
-                self.step_cur_fig = None
-                self.step_cur_flat_axes = None
-                self.step_next_ax_index = 0
             logger.debug(f"Saved plot to {target_dir}")
+
+        # Regardless of whether we saved the image, remove the pointers as if we had closed it. We do not close it
+        # so that it stays open for interactive notebooks, but we pretend we did so that we create new ones later on.
+        if close_it:
+            self.step_cur_fig = None
+            self.step_cur_flat_axes = None
+            self.step_next_ax_index = 0
 
     def _plot_common_to_ax(
         self,
@@ -497,3 +502,12 @@ class PlotTracer(NoopAlgorithmTracer, NoopPolygonMathTracer):
 
         # Save the current figure if needed, but do not close it, in case the algorithm continues.
         self._save_current_figure_if_needed(close_it=False)
+
+    def on_algorith_raised_exception(self, algorithm: StraightSkeletonAlgorithm, exception: Exception) -> None:
+        """Save the last plot we were able to get, since we are crashing."""
+
+        # Save the last image since we are crashing.
+        self._save_current_figure_if_needed(close_it=True)
+
+        # Also attempt to draw a last image.
+        self.on_debug_hit(algorithm=algorithm)
