@@ -914,9 +914,9 @@ class StraightSkeletonAlgorithm:
                         continue
                 # If the vertex is still unprocessed, this would generate a degenerate skeleton, so raise an error.
                 # TODO This does happen in real cases. Originally I added it to detect unfinished skeletons, when
-                # events the last events were detected outside the polygon due to bad LAVs. However I have seen valid
+                # the last events were detected outside the polygon due to bad LAVs. However I have seen valid
                 # cases in which a split event is generated outside the polygon due to the opposite edge collapsing
-                # under earlier edge events.
+                # under earlier edge events. We also now detect the former cases during skeleton iteration.
                 # raise RuntimeError("Event is still pending, but it is outside the polygon.")
                 continue
 
