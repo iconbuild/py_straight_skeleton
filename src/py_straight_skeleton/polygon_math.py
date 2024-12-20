@@ -484,13 +484,14 @@ class Edge:
     def reset_count(cls):
         cls.__id_counter = itertools.count()
 
-    def __init__(self, start_vertex: VertexInfo, end_vertex: VertexInfo):
-        """Initializes a new Edge between two vertices. The edge is automatically set on the vertices. Direction of
-        the edge is from start to end.
+    def __init__(self, start_vertex: VertexInfo, end_vertex: VertexInfo, is_original_edge: bool = True):
+        """Initializes a new Edge between two vertices. The edge is automatically set on the vertices, if this
+        edge is an original edge. Direction of the edge is from start to end.
 
         Args:
             start_vertex: Start vertex of the edge.
             end_vertex: End vertex of the edge.
+            is_original_edge: Whether this is an edge in the original polygon.
         """
         self._auto_id = next(self.__id_counter)
 
@@ -499,8 +500,9 @@ class Edge:
         self.direction = (end_vertex.position - start_vertex.position).normalized()
 
         # Automatically set this edge on the vertices.
-        start_vertex.next_orig_edge = self
-        end_vertex.prev_orig_edge = self
+        if is_original_edge:
+            start_vertex.next_orig_edge = self
+            end_vertex.prev_orig_edge = self
 
     def __repr__(self):
         return f"Edge(id={self._auto_id}, {self.start_vertex.position}, {self.end_vertex.position})"

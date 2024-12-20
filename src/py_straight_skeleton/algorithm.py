@@ -735,7 +735,7 @@ class StraightSkeletonAlgorithm:
                     continue
 
                 # Test that the point is in the region defined by the candidate split points.
-                test_edge = Edge(start_vertex=y_cand, end_vertex=x_cand)
+                test_edge = Edge(start_vertex=y_cand, end_vertex=x_cand, is_original_edge=False)
                 in_region = test_edge.is_point_in_edge_region(point=event_info.position)
                 if not in_region:
                     continue
