@@ -170,10 +170,16 @@ class EventInfo:
 
         if not isinstance(other, EventInfo):
             return NotImplemented
-        if abs(self.distance - other.distance) < TIME_EPSILON:
-            return self._auto_id < other._auto_id
-        else:
-            return self.distance < other.distance
+
+        # TODO: In older versions of the algorithm, before event requeing on event failure, it was necessary to sort by
+        # distance here if the priorities were tied. It seems that it now causes issues, and that event detection time
+        # (equal to auto_id) is preferred in order to break ties. This however is brittle, and requires better
+        # decision making when events happen at the same priority.
+        # if abs(self.distance - other.distance) < TIME_EPSILON:
+        #     return self._auto_id < other._auto_id
+        # else:
+        #     return self.distance < other.distance
+        return self._auto_id < other._auto_id
 
     @property
     def is_edge_event(self):
