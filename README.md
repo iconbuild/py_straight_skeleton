@@ -16,6 +16,14 @@ Input | Result
 :---------------------------------------:|:---------------------------------------:
 ![Polygon](docs/images/fig2_polygon.png) | ![Result](docs/images/fig3_results.png)
 
+## Installation
+
+The code is available in [pypi](https://pypi.org/project/py_straight_skeleton/):
+
+```sh
+pip install py_straight_skeleton
+```
+
 ## Usage
 
 ```text
